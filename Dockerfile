@@ -17,7 +17,7 @@ ENV AWSCLI_VERSION=${AWSCLI_VERSION}
 RUN apt-get update \
     && apt-get install -y ansible curl gnupg unzip \
     make nano openssh-client openssh-server \
-    software-properties-common wget
+    software-properties-common wget locales
 
 # Install AWS cli command
 RUN curl -LO https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip \
@@ -56,6 +56,13 @@ RUN chown -R ansible: /home/ansible/.ssh; chmod 700 /home/ansible/.ssh; chmod 60
 
 # Change the .env to override this timezone
 ENV TIMEZONE Europe/London
+
+# Fix ERROR: Ansible could not initialize the preferred locale: unsupported locale setting
+RUN sed -i -e 's/# en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/' /etc/locale.gen \
+    && locale-gen
+
+# Set the Docker socket
+ENV DOCKER_HOST unix:///var/run/docker.sock
 
 WORKDIR /home/ansible
 
