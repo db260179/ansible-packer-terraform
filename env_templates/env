@@ -1,0 +1,21 @@
+
+# Global Environment variables
+COMPOSE_PROJECT_NAME=ansible-sysadm
+COMPOSE_HTTP_TIMEOUT=120
+LOGGING="--log-driver json-file --log-opt max-size=20m --log-opt max-file=3"
+
+# Image base
+BASE_IMAGE=debian:bookworm
+
+# Container variables
+AWSCLI_VERSION="2.1.29"
+
+ANSIBLE_PASSWORD=
+USERUID=
+USERGID=
+LOCAL_USERS="dandt"
+
+# Ansible control-node ssh port
+SSH_PORT=2222
+
+TIMEZONE=Europe/London

@@ -1,0 +1,26 @@
+# Ignore global docker env
+.env
+
+Compiled files
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+
+# logs
+*.log
+
+# Directories
+.terraform/
+.vagrant/
+
+# Ignored Terraform files
+*gitignore*.tf
+
+# Ignore Mac .DS_Store files
+.DS_Store
+
+# Ignore vscode files
+.vscode/
+
+# Ignore ssh authorized_keys
+authorized_keys
