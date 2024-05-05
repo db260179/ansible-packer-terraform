@@ -9,6 +9,7 @@ services:
       context: "."
       args:
         AWSCLI_VERSION: "${AWSCLI_VERSION}"
+        BASE_IMAGE: "${BASE_IMAGE}"
         PASSWORD: "${ANSIBLE_PASSWORD}"
         USERUID: "${USERUID}"
         USERGID: "${USERGID}"

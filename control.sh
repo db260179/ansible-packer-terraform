@@ -42,6 +42,15 @@ else
     fi
 fi
 
+# Create a private ssh key if it doesnt exist
+if [ ! -f "${HERE}/ssh/id_rsa" ]; then
+  echo "Private SSH key does not exist? - Creating one!"
+  echo "Make sure to distribute the public key on remote nodes!"
+  ssh-keygen -t rsa -f ssh/id_rsa
+  echo "Copy this ssh public key to remote hosts!"
+  cat ssh/id_rsa.pub
+fi
+
 # Create an authorized_keys file if it doesn't exist
 if [ ! -f "${HERE}/authorized_keys" ]; then
   echo "authorized_keys doesn't exist! - creating one"
@@ -86,7 +95,7 @@ usage() {
 	echo
 	echo "Usage: ${MYNAME} [composefile] [command]"
 	echo
-	echo "	Commands: config clear-images build push-images start stop stop-down stop-down-vol stop-clear-all logs"
+	echo "	Commands: config clear-images build push-images start stop stop-down stop-down-clear-img stop-down-vol stop-clear-all logs"
 	echo
 	echo "	Example: ./${MYNAME} (composefile) config - Show docker-compose config for ansible-control-node"
 	exit 0
@@ -108,47 +117,42 @@ case "$2" in
 	config*)
 		${dockercomposecmd} ${composefile} config
 		;;
-
 	clear-images)
 		${dockercomposecmd} ${composefile} down --rmi all
 		docker system prune -f
 		;;
-
 	build)
 		${dockercomposecmd} ${composefile} build
 		;;
-
 	push-images)
 		${dockercomposecmd} ${composefile} push
 		;;
-
 	start|run)
 		${dockercomposecmd} ${composefile} up -d
+		source .env
 		echo "Control-node: 'ssh -o \"UserKnownHostsFile=/dev/null\" -o \"StrictHostKeyChecking=no\" ansible@localhost -p $SSH_PORT'"
 		echo ""
 		;;
-
 	stop)
 		${dockercomposecmd} ${composefile} stop
 		;;
-
 	stop-down)
 		${dockercomposecmd} ${composefile} down --timeout ${TIMEOUT}
 		;;
-
+	stop-down-clear-img)
+		${dockercomposecmd} ${composefile} down --rmi all --timeout ${TIMEOUT}
+		docker image prune -f
+		;;
 	stop-down-vol)
 		${dockercomposecmd} ${composefile} down -v --timeout ${TIMEOUT}
 		;;
-
 	stop-clear-all)
 		${dockercomposecmd} ${composefile} down --timeout ${TIMEOUT}
 		docker system prune -a -f
 		;;
-
 	log*)
 		${dockercomposecmd} ${composefile} logs -f
 		;;
-
 	*)
 		usage
 		;;

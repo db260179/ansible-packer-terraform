@@ -24,3 +24,6 @@ Compiled files
 
 # Ignore ssh authorized_keys
 authorized_keys
+
+# Ignore ssh keys
+ssh/id_*
