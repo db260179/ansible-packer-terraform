@@ -22,6 +22,9 @@ if file_exists "/home/ansible/ansible-code/collections/requirements.yml"; then
   su - ansible -c "ansible-galaxy install -r /home/ansible/ansible-code/collections/requirements.yml"
 fi
 
+# Ansible community general - proxmox
+su - ansible -c "ansible-galaxy collection install community.general"
+
 # Ansible terraform provider
 su - ansible -c "ansible-galaxy collection install cloud.terraform"
 
